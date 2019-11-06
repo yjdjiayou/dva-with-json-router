@@ -4,6 +4,9 @@ import User from './routes/User';
 import Profile from './routes/Profile';
 import Login from './routes/Login';
 import Register from './routes/Register'; */
+
+
+// 这也是 umi 的核心原理，根据约定式的文件配置，生成对应的像下面这样格式的 json
 //配置式路由，集中式路由
 export default [
     { path:'/',//路径 
