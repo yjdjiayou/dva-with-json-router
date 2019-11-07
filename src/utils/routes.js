@@ -1,6 +1,7 @@
-import {Router, Route, Redirect} from 'dva/router';
+import {Route, Redirect} from 'dva/router';
 import React from 'react';
-//import dynamic from 'dva/dynamic';
+
+// import dynamic from 'dva/dynamic';
 
 /**
  default: "模块内容"
@@ -19,7 +20,7 @@ export function renderAllRoutes(routesConfig, app) {
 
 function dynamic({app, models, component}) {
   return class extends React.Component {
-    state = {Component: null}
+    state = {Component: null};
 
     componentDidMount() {
       this.setState({Component: () => <>加载中</>});
@@ -27,7 +28,6 @@ function dynamic({app, models, component}) {
         Promise.all(models().map(item => item())),
         component()
       ]).then(([models, Component]) => {//[ {namespace: 'home',state: {title:'我是首页'},};]
-        console.log(app);
         models.forEach(model => {
           let finded = app._models.find(item => item.namespace === model.default.namespace);
           if (!finded)
@@ -57,6 +57,8 @@ export function renderRoutes(routesConfig, app) {
             component: () => {
               return getComponent().then(result => {
                 let Component = result.default || result;
+                // 返回一个函数组件，而不是直接返回 JSX
+                // 这里接收的 props 是路由信息
                 return props => <Component {...props} routes={routes} app={app}/>
               });
             }
@@ -69,5 +71,5 @@ export function renderRoutes(routesConfig, app) {
 
 export function renderRedirect(routes) {
   let {path} = routes.find(route => route.redirect) || routes[0];
-  return <Redirect to={path}/>
+  return <Redirect key={path} to={path}/>
 }
